@@ -45,4 +45,8 @@
                         "-initWithStyle is not allowed, use -init instead")));
 + (instancetype)presentPeoplePickerViewControllerForParentViewController:
         (UIViewController *)parentViewController;
+/**
+ * Simply calls self.searchController.hidesNavigationBarDuringPresentation = hides
+ */
+-(void)searchControllerHidesNavigationBarDuringPresentation:(BOOL)hides;
 @end

@@ -375,4 +375,8 @@
     }
 }
 
+-(void)searchControllerHidesNavigationBarDuringPresentation:(BOOL)hides {
+    self.searchController.hidesNavigationBarDuringPresentation = hides;
+}
+
 @end
