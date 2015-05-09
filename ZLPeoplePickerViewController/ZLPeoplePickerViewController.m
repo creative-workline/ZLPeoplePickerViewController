@@ -43,6 +43,10 @@
 - (void)setup {
     _numberOfSelectedPeople = ZLNumSelectionNone;
     self.filedMask = ZLContactFieldDefault;
+    
+    // get the sort ordering from general contact settings
+    self.sortOrdering = ABPersonGetSortOrdering();
+
 }
 
 + (void)initializeAddressBook {

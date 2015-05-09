@@ -20,6 +20,10 @@ static NSString *const kCellIdentifier = @"cellID";
 
 @property (nonatomic) ZLContactField filedMask;
 
+// the general user sort ordering (0 - kABPersonSortByFirstName, 1 - kABPersonSortByLastName)
+@property (nonatomic) int sortOrdering;
+
+
 - (void)setPartitionedContactsWithContacts:(NSArray *)contacts;
 - (void)configureCell:(UITableViewCell *)cell forContact:(APContact *)product;
 - (BOOL)shouldEnableCellforContact:(APContact *)contact;

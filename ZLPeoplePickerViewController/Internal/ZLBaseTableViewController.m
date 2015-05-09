@@ -41,28 +41,49 @@
         }
 
         // add new contact
-        SEL selector = @selector(lastName);
-        if (contact.lastName.length == 0) {
-            selector = @selector(compositeName);
+        
+        // use first or last name selector depending on sort ordering from general user settings
+        SEL selector;
+        if (_sortOrdering == kABPersonSortByFirstName) {
+            selector = @selector(firstName);
+            if (contact.firstName.length == 0) {
+                selector = @selector(compositeName);
+            }
+        } else {
+            selector = @selector(lastName);
+            if (contact.lastName.length == 0) {
+                selector = @selector(compositeName);
+            }
         }
+    
         NSInteger index = [[LRIndexedCollationWithSearch currentCollation]
                    sectionForObject:contact
             collationStringSelector:selector];
         // contact.sectionIndex = index;
         [self.partitionedContacts[index] addObject:contact];
     }
-
+   
     // sort sections
     NSUInteger sectionCount =
         [[[LRIndexedCollationWithSearch currentCollation] sectionTitles] count];
     int sectionCountInt =
         [[NSNumber numberWithUnsignedInteger:sectionCount] intValue];
+    
+    // use first or last name selector depending on sort ordering from general user settings
+    SEL selector;
+    if (_sortOrdering == kABPersonSortByFirstName) {
+        selector = @selector(firstNameOrCompositeName);
+    } else {
+        selector = @selector(lastNameOrCompositeName);
+    }
+    
     for (NSInteger i = 0; i < sectionCountInt; i++) {
         NSArray *section = self.partitionedContacts[i];
+       
         NSArray *sortedSectionByLastName =
             [[LRIndexedCollationWithSearch currentCollation]
                    sortedArrayFromArray:section
-                collationStringSelector:@selector(lastNameOrCompositeName)];
+                collationStringSelector:selector];
 
         NSMutableArray *sortedSection = [NSMutableArray array];
         {
@@ -170,11 +191,19 @@
 
     return cell;
 }
-
 #pragma mark - ()
 - (void)configureCell:(UITableViewCell *)cell forContact:(APContact *)contact {
-    NSString *stringToHightlight =
+    NSString *stringToHightlight;
+
+    // first or last name hightlighting depending on sort ordering from general user settings
+    if (_sortOrdering == kABPersonSortByFirstName) {
+        stringToHightlight =
+        contact.firstName ? contact.firstName : contact.compositeName;
+    } else {
+        stringToHightlight =
         contact.lastName ? contact.lastName : contact.compositeName;
+    }
+    
     NSRange rangeToHightlight =
         [contact.compositeName rangeOfString:stringToHightlight];
     NSMutableAttributedString *attributedString = [
